@@ -13,13 +13,20 @@ numPopulation <- 100
 # the third index represents a persons immunisation status, Immune or Not Immune
 people <- hash()
 
+# how many people are infected with the virus at the start of the pandemic?
+patientZero <- 2
+
+# virus invect
+
 # create a person for every individual in the population
 inilisePeople <- function(populationSize) {
-  for(persons in 0:populationSize){
+  for(persons in 1:populationSize + 1){
     # people begin life, Healthy, Alive & Not Immune
-    people[persons] <- list("Healthy","Alive","Not Immune")
+    people[persons] <- c("Healthy","Alive","Not Immune")
   }
 }
 
 inilisePeople(numPopulation) # create people
-print(people)
+
+print(values(people["1"])[1]) # get specific value
+
