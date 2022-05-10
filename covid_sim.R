@@ -22,27 +22,29 @@ vaccineRollOut = 20
 
 # create a person for every individual in the population
 inilisePeople <- function(populationSize) {
+  # person infected
+  unlucky<-list(runif(patientZero, min=1, max=populationSize))
+  unlucky<-round(unlucky)
+  print(unlucky)
   
   for(persons in 1:populationSize + 1){
-    # people begin life, Healthy, Alive & Not Immune
-    people[persons] <- c("Healthy","Alive","Not Immune")
-  }
-  
-  # infect patient zero/'s
-  for(victom in 1:patientZero){
-    # person infected
-    unlucky<-runif(1, min=1, max=populationSize)
-    unlucky<-round(unlucky)
-    infectPatient(unlucky)
-    print(values(people[toString(unlucky)]))
+    # people begin life healthy or sick, Alive & Not Immune 
+    if(persons %in% unlucky){
+      # this person has been unfortunately infected 
+      people[persons] <- c("sick","Alive","Not Immune")
+      }else{
+      # this person has been fortunate and is healthy 
+      people[persons] <- c("Healthy","Alive","Not Immune")
+    }
+
   }
 }
 
 
 infectPatient <- function(patient){
+  ##### ERROR HERE v
   values(people[toString(patient)])[1] <- "sick"
 }
 
-
 inilisePeople(numPopulation) # create people
-print(people)
+print(people["92"])
