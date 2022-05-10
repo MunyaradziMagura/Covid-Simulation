@@ -1,31 +1,43 @@
 # total number of perople in the simulation
 N_population = 10
 
+#total number of people a person can meet 
+meet_population = 10
+
+infectious_period = 10
 
 # a person has a random age between 1 & 99
 # a person is assigned a random gender 
 # a person is born healthy
 # a person is immunized 
 # a person has 0 Hospitalizations to begin with
+# a person has 0 connections to begin with
+# a person can be infectious for 10 days 
 # create data frame 
 People <<- data.frame (
 
-  age =  c(30),   # 0 - 99
+  age <-  c(30),   # 0 - 99
   
-  gender = c("Female"),   # [Female, Male]
+  gender <- c("Female"),   # [Female, Male]
   
-  Vitality = c("Healthy"),  #[healthy, sick, dead]
+  Vitality <- c("Healthy"),  #[healthy, sick, dead]
   
-  immunised = c("immunized"),  # True or False 
+  immunised <- c("immunized"),  # True or False 
   
-  Hospitalizations = c(0) # if a person has been hospitalized
+  Hospitalizations <- c(0), # if a person has been hospitalized
+  
+  connection <- 0, # if a sick person connects with this person
+  
+  infectious <- 0 #  if this person is sick they can infect others
+  
+  
 )
 
 
 # create people
 createPeople <- function(populationSize) {
   for(me in 1:populationSize){
-    People[nrow(People) + 1,] <<- c(as.numeric(round(runif(1, min=1, max=99))), if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male","Healthy","immunized",as.numeric(0)) 
+    People[nrow(People) + 1,] <<- c(as.numeric(round(runif(1, min=1, max=99))), if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male","Healthy","immunized",as.numeric(0),as.numeric(0),as.numeric(0)) 
   }
 }
 # this function is for infecting healthy people with covid people
