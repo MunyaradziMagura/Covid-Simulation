@@ -10,6 +10,9 @@ infectiousPeriod = 10
 # number of patinet Zeros within the simulaton
 numPatientZero = 3
 
+# how many days the pandemic runs for 
+runTime = 20
+
 # a person has a random age between 1 & 99
 # a person is assigned a random gender 
 # a person is born healthy
@@ -37,6 +40,12 @@ People <<- data.frame (
   infectedToday = c(FALSE) # True if the person was infected today
 )
 
+# stores daily events
+PandemicData <<- data.frame (
+  day = c(1)
+)
+
+
 # create people & infect a random number
 createPeople <- function(populationSize, numInfected) {
   # number of infected 
@@ -56,7 +65,18 @@ createPeople <- function(populationSize, numInfected) {
       infected <- infected -1 
     }
   }
+  # initilise pandemic dataframe for day 1
+  PandemicData <<- cbind(PandemicData, People[!names(People) %in% names(PandemicData)])
+  
 }
+
+pandemic <- function(peopleData){
+
+}
+
+
+
+
 
 # this function is for infecting healthy people with covid people
 infectPerson <- function(person){
@@ -64,6 +84,5 @@ infectPerson <- function(person){
 }
 
 
-
 createPeople(numPopulation, numPatientZero) # create population poll
-People
+pandemic(People)
