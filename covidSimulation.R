@@ -30,22 +30,22 @@ createPeople <- function(populationSize) {
 }
 # this function is for infecting healthy people with covid people
 infectPerson <- funcion(person){
-  People$Vitality[person] <- "sick"
+  People$Vitality[person] <<- "sick"
 }
 
 # this function is for killing people
 killPerson <- function(person){
-  People$Vitality[person] <- "dead"
+  People$Vitality[person] <<- "dead"
 }
 
 # this function is for making someone healthy
 healPerson <- function(person){
-  People$Vitality[person] <- "healthy"
+  People$Vitality[person] <<- "healthy"
 }
 
-# this function is for immunising people
+# this function is for immunizing people
 immunisePerson <- function(person){
-  People$Vitality[person] <- "immunised"
+  People$Vitality[person] <<- "immunised"
 }
 
 
