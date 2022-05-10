@@ -77,7 +77,7 @@ pandemic <- function(){
    # actions of each person 
    for (person in 1: numPopulation){
      # this is a vecor of everyone that person has met on this day
-     met = c(round(runif(10, min = 0, max = maxMeet)))
+     met = unique(c(round(runif(maxMeet, min = 1, max = numPopulation))))
      print(met)
      
    }
