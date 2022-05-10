@@ -18,7 +18,7 @@ People <<- data.frame (
 
   age <-  c(as.numeric(round(runif(1, min=1, max=99)))),   # 0 - 99
   
-  gender <- c(if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male","Healthy"),   # [Female, Male]
+  gender <- c(if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male"),   # [Female, Male]
   
   Vitality <- c("Healthy"),  #[healthy, sick, dead]
   
@@ -30,20 +30,19 @@ People <<- data.frame (
   
   infectious <- c(0), #  if this person is sick they can infect others
   
-  infectedToday <- c(FALSE)
-  
-  
+  infectedToday <- c(FALSE) # True if the person was infected today
 )
-
 
 # create people
 createPeople <- function(populationSize) {
-  for(me in 1:populationSize){
+  for(me in 2:populationSize){
+    # create a person and add them to the people dataframe
     People[nrow(People) + 1,] <<- c(as.numeric(round(runif(1, min=1, max=99))), if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male","Healthy","immunized",as.numeric(0),as.numeric(0),as.numeric(0),FALSE) 
   }
 }
+
 # this function is for infecting healthy people with covid people
-infectPerson <- funcion(person){
+infectPerson <- function(person){
   People$Vitality[person] <<- "sick"
 }
 
@@ -62,6 +61,5 @@ immunisePerson <- function(person){
   People$Vitality[person] <<- "immunised"
 }
 
-
-createPeople(N_population)
+createPeople(N_population) # create population poll
 People
