@@ -2,7 +2,7 @@
 numPopulation = 10
 
 #total number of people a person can meet, a person can also meet the same person more than once 
-meetPopulation = 10
+maxMeet = 10
 
 # how long someone can spread the virus
 infectiousPeriod = 10
@@ -70,8 +70,18 @@ createPeople <- function(populationSize, numInfected) {
   
 }
 
-pandemic <- function(peopleData){
-
+pandemic <- function(){
+  # each day of the pandemic 
+ for (day in 2:runTime){
+   print(day)
+   # actions of each person 
+   for (person in 1: numPopulation){
+     # this is a vecor of everyone that person has met on this day
+     met = c(round(runif(10, min = 0, max = maxMeet)))
+     print(met)
+     
+   }
+ }
 }
 
 
@@ -85,4 +95,4 @@ infectPerson <- function(person){
 
 
 createPeople(numPopulation, numPatientZero) # create population poll
-pandemic(People)
+pandemic()
