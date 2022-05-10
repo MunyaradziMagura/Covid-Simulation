@@ -16,9 +16,9 @@ infectious_period = 10
 # create data frame 
 People <<- data.frame (
 
-  age <-  c(30),   # 0 - 99
+  age <-  c(as.numeric(round(runif(1, min=1, max=99)))),   # 0 - 99
   
-  gender <- c("Female"),   # [Female, Male]
+  gender <- c(if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male","Healthy"),   # [Female, Male]
   
   Vitality <- c("Healthy"),  #[healthy, sick, dead]
   
@@ -26,9 +26,11 @@ People <<- data.frame (
   
   Hospitalizations <- c(0), # if a person has been hospitalized
   
-  connection <- 0, # if a sick person connects with this person
+  connection <- c(0), # if a sick person connects with this person
   
-  infectious <- 0 #  if this person is sick they can infect others
+  infectious <- c(0), #  if this person is sick they can infect others
+  
+  infectedToday <- c(FALSE)
   
   
 )
@@ -37,7 +39,7 @@ People <<- data.frame (
 # create people
 createPeople <- function(populationSize) {
   for(me in 1:populationSize){
-    People[nrow(People) + 1,] <<- c(as.numeric(round(runif(1, min=1, max=99))), if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male","Healthy","immunized",as.numeric(0),as.numeric(0),as.numeric(0)) 
+    People[nrow(People) + 1,] <<- c(as.numeric(round(runif(1, min=1, max=99))), if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male","Healthy","immunized",as.numeric(0),as.numeric(0),as.numeric(0),FALSE) 
   }
 }
 # this function is for infecting healthy people with covid people
