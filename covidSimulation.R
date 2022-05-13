@@ -1,3 +1,8 @@
+
+#install.packages("plyr")
+library("plyr")
+
+
 # total number of people in the simulation
 numPopulation <- 100
 
@@ -28,6 +33,10 @@ vaccineInjection = HumanImmunity * 4
 # the chance someone will be hospitalized after being sick
 HospitalizationRate <- 5/100
 
+# oldest someone can get hospitalized
+hospitazationOldest <- 50
+# youngest someone can get hospitalized
+hospitazationYoungest <- 5
 
 # a person has a random age between 1 & 99
 # a person is assigned a random gender 
@@ -41,7 +50,7 @@ People <<- data.frame (
   
   age =  c(round(runif(numPopulation, min=1, max=99))),   # 0 - 99
   
-  gender = c(rep(if (round(runif(1, min=1, max=99)) %% 2) "Female" else "Male", numPopulation)),   # [Female, Male]
+  gender = c(rpois(n = numPopulation, lambda = 10)),   # [Female, Male]
   
   Vitality = c(rep("Healthy",numPopulation)),  #[Healthy, Sick, Dead]
   
@@ -60,6 +69,8 @@ People$Vitality[sample(nrow(People),numPatientZero)] <- "Sick"
 # increase infectious rate 
 People <- within(People, infectious[Vitality == 'Sick'] <- infectiousPeriod)
 
+# change numbers to male and female 
+People$gender <- ifelse(People$gender %% 2 == 0, "Female", "Male")
 # stores daily events
 PandemicData <<- data.frame (
   day = c(1)
@@ -67,28 +78,35 @@ PandemicData <<- data.frame (
 #  add people to the day dataframe
 PandemicData <<- cbind(PandemicData, People[!names(People) %in% names(PandemicData)])
 length(People[Vitality == "Sick"])
-
-
-
-
-
-
-# this function is for infecting healthy people with covid people
-infectPerson <- function(person){
-  People$Vitality[person] <<- "Sick"
-}
+# Day 1 results 
+print("DAY")
+print(1)
+print("Deaths")
+print(nrow(subset(People, Vitality== "Dead")))
+print("Sick")
+print(nrow(subset(People, Vitality== "Sick")))
+print("Hospitalizations")
+print(nrow(subset(People, Hospitalizations > 0)))
+print("Healthy")
+print(nrow(subset(People, Vitality== "Healthy")))
 
 # each day of the pandemic 
-for (day in 2:runTime){
+for (Currentday in 2:runTime){
   print("DAY")
-  print(day)
+  print(Currentday)
   print("Deaths")
   print(nrow(subset(People, Vitality== "Dead")))
   print("Sick")
   print(nrow(subset(People, Vitality== "Sick")))
+  print("Hospitalizations")
+  print(nrow(subset(People, Hospitalizations > 0)))
   print("Healthy")
   print(nrow(subset(People, Vitality== "Healthy")))
   
+  # dataframe to capture the daily results 
+  dayResults <<- data.frame (
+    day = c(Currentday)
+  )
   
   # people met by sick people 
   met <- unique(c(round(runif(nrow(subset(People, Vitality == "Sick")) * round(runif(1, 0,maxMeet)), min=1, max=numPopulation))))
@@ -108,10 +126,14 @@ for (day in 2:runTime){
   # Met person has a chance of death after getting the virus, if they do not die they will get sick 
   People$Vitality[met] <- ifelse(People$Vitality[met] == "Healthy" & round(runif(1),2) * People$immunised[met] < infectionPercentage,  if(round(runif(1),2) < deathPercentage) "Dead" else "Sick","Healthy")
   
-  # older people will have a higher chance of being hospitalized than younger people 
-  People$Hospitalizations <-ifelse(People$Vitality == "Sick" & People$age > 50, )
+  # older people & those below 5 will have a higher chance of being hospitalized than younger people 
+  People$Hospitalizations <-ifelse(People$Vitality == "Sick" & (People$age > 50 | People$age < 5), if(round(runif(1),2) < HospitalizationRate) People$Hospitalizations + 1 else People$Hospitalizations,People$Hospitalizations)
   
   print("###########################################")
-
+  # make day data frame 
+  dayResults <<- cbind(dayResults, People[!names(People) %in% names(dayResults)])
   
+  # append daily results to pandemic data frame
+  PandemicData <- rbind.fill(PandemicData, dayResults)
 }
+
