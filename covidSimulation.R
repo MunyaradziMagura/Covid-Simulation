@@ -1,5 +1,5 @@
 # total number of people in the simulation
-numPopulation <- 10
+numPopulation <- 100
 
 #total number of people a person can meet, a person can also meet the same person more than once 
 maxMeet <- 10
@@ -8,7 +8,7 @@ maxMeet <- 10
 infectiousPeriod <- 10
 
 # number of patinet Zeros within the simulation
-numPatientZero <- 1
+numPatientZero <- 5
 
 # how many days the pandemic runs for 
 runTime <- 20
@@ -20,10 +20,14 @@ deathPercentage <- 2/100
 infectionPercentage <- 30/100
 
 # natural immunity after getting infected and surviving  
-HumanImmunity <- 50 / 100
+HumanImmunity <- 5 / 100
 
 # vaccine 
 vaccineInjection = HumanImmunity * 4
+
+# the chance someone will be hospitalized after being sick
+HospitalizationRate <- 5/100
+
 
 # a person has a random age between 1 & 99
 # a person is assigned a random gender 
@@ -73,23 +77,41 @@ length(People[Vitality == "Sick"])
 infectPerson <- function(person){
   People$Vitality[person] <<- "Sick"
 }
-PandemicData
+
 # each day of the pandemic 
 for (day in 2:runTime){
+  print("DAY")
   print(day)
+  print("Deaths")
+  print(nrow(subset(People, Vitality== "Dead")))
+  print("Sick")
+  print(nrow(subset(People, Vitality== "Sick")))
+  print("Healthy")
+  print(nrow(subset(People, Vitality== "Healthy")))
+  
   
   # people met by sick people 
-  met <- unique(c(round(runif(nrow(subset(People, Vitality == "Sick")) * maxMeet, min=1, max=numPopulation))))
+  met <- unique(c(round(runif(nrow(subset(People, Vitality == "Sick")) * round(runif(1, 0,maxMeet)), min=1, max=numPopulation))))
+  print("People met")
+  print(length(met))
   
   # will they get infected
-  People$Vitality[People$Vitality[met] == "Healthy"] <- ifelse(People$Vitality[met] == "Healthy" & round(runif(1),2) * People$immunised > infectionPercentage, "Healthy", if (round(runif(1),2) < deathPercentage) "Sick" else "Dead")
+  #People$Vitality[People$Vitality[met] == "Healthy"] <- ifelse(People$Vitality[met] == "Healthy" & , "Healthy", "Sick")
   
   # if someone is already infected decrements their infectious period
-  People <- within(People, infectious[Vitality == 'Sick' & infectious > 0] <- infectious - 1)
+  People$infectious <- ifelse(People$infectious > 0,People$infectious -1,People$infectious)
+  #people get immunity from the virus 
+  People$immunised<- ifelse(People$Vitality == "Sick" & People$infectious <= 0,HumanImmunity,People$immunised)
+  # person is now healthy
+  People$Vitality <- ifelse(People$Vitality == "Sick" & People$infectious <= 0,"Healthy",People$Vitality)
   
+  # Met person has a chance of death after getting the virus, if they do not die they will get sick 
+  People$Vitality[met] <- ifelse(People$Vitality[met] == "Healthy" & round(runif(1),2) * People$immunised[met] < infectionPercentage,  if(round(runif(1),2) < deathPercentage) "Dead" else "Sick","Healthy")
   
+  # older people will have a higher chance of being hospitalized than younger people 
+  People$Hospitalizations <-ifelse(People$Vitality == "Sick" & People$age > 50, )
   
-  # check if person is no longer infectious 
-  People <- within(People, Vitality[infectious < 0 ] <- "Healthy")
-  People <- within(People, infectious[infectious < 0] <- 0)
+  print("###########################################")
+
+  
 }
