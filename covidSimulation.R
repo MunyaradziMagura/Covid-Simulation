@@ -1,8 +1,14 @@
 
 #install.packages("plyr")
-library("plyr")
-
-
+#install.packages("tidyverse")
+#install.packages("dplyr")
+#install.packages("plotly")
+#install.packages("gridExtra")
+library(gridExtra)
+library(plyr)
+library(ggplot2)
+library(plotly)
+library(dplyr)
 # total number of people in the simulation
 numPopulation <- 100
 
@@ -136,4 +142,34 @@ for (Currentday in 2:runTime){
   # append daily results to pandemic data frame
   PandemicData <- rbind.fill(PandemicData, dayResults)
 }
+
+
+# get the gender distribution
+genderDistribution <- aggregate(People[c('gender')], by=list(People$gender == "Female"), FUN=length)
+names(genderDistribution) <- c("gender", "total")
+genderDistribution$gender <- ifelse(genderDistribution$gender == FALSE, "Male", "Female")
+print(genderDistribution)
+
+
+# number of sick broken down by gender 
+totalSick <- PandemicData[which(PandemicData$Vitality == 'Sick'),] %>% group_by(day,gender) %>% summarise(total = n())
+
+#Population gender breakdown
+p1 = ggplot(data=genderDistribution, aes(x=gender, y=total)) +
+  geom_bar(stat="identity", fill="steelblue")+
+  geom_text(aes(label=total), vjust=-0.3, size=3.5)+
+  theme_minimal()+
+  labs(x='Gender', y='Total Population', title='Population gender breakdown')
+
+#Daily Infections by Gender
+p2 = ggplot(totalSick, aes(fill=gender, y=total, x=day)) + 
+  geom_bar(position='dodge', stat='identity')+
+  labs(x='Pandemic Days', y='Total infections', title='Daily Infections by Gender')
+
+# Daily death count 
+
+# population trend 
+
+grid.arrange(p1, p2)
+
 
