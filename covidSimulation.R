@@ -64,7 +64,7 @@ People <<- data.frame (
   
   Hospitalizations = c(rep(0, numPopulation)), # if a person has been hospitalized
   
-  infectious = c(rep(0, numPopulation)), #  if this person is sick they can infect others
+  infectious = c(rep(0, numPopulation)) #  if this person is sick they can infect others
   )
 # add sick people randomly
 People$Vitality[sample(nrow(People),numPatientZero)] <- "Sick"
