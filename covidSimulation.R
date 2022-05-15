@@ -89,33 +89,23 @@ PandemicData <<- data.frame (
 PandemicData <<- cbind(PandemicData, People[!names(People) %in% names(PandemicData)])
 
 # Day 1 results 
-print("DAY")
-print(1)
-print("Deaths")
-print(nrow(subset(People, Vitality== "Dead")))
-print("Sick")
-print(nrow(subset(People, Vitality== "Sick")))
-print("Hospitalizations")
-print(nrow(subset(People, Hospitalizations > 0)))
-print("Healthy")
-print(nrow(subset(People, Vitality== "Healthy")))
-
+cat("DAY", 1)
+cat("Deaths",nrow(subset(People, Vitality== "Dead")))
+cat("Sick",nrow(subset(People, Vitality== "Sick")))
+cat("Hospitalizations",nrow(subset(People, Hospitalizations > 0)))
+cat("Healthy",nrow(subset(People, Vitality== "Healthy")))
 
 
 
 # each day of the pandemic 
 for (Currentday in 2:runTime){
-  print("DAY")
-  print(Currentday)
-  print("Deaths")
-  print(nrow(subset(People, Vitality== "Dead")))
-  print("Sick")
-  print(nrow(subset(People, Vitality== "Sick")))
-  print("Hospitalizations")
-  print(nrow(subset(People, Hospitalizations > 0)))
-  print("Healthy")
-  print(nrow(subset(People, Vitality== "Healthy")))
-  print("###########################################")
+  cat("\n###########################################\n")
+  cat("DAY: ",Currentday)
+  cat("\nDeaths: ",nrow(subset(People, Vitality== "Dead")))
+  cat("\nSick: ",nrow(subset(People, Vitality== "Sick")))
+  cat("\nHospitalizations: ",nrow(subset(People, Hospitalizations > 0)))
+  cat("\nHealthy: ",nrow(subset(People, Vitality== "Healthy")))
+
   
   # dataframe to capture the daily results 
   dayResults <<- data.frame (
@@ -187,6 +177,7 @@ ImmunizedOrNot <- PandemicData[PandemicData$Vitality == "Sick",] %>% group_by(da
 
 
 
+
 # GENERATE PLOTS
 
 #Population gender breakdown
@@ -200,7 +191,7 @@ ggplot(data=genderDistribution, aes(x=gender, y=total)) +
 
 # active cases, total deaths, and total infected
 ggplot(cases, aes(x=titles, y=data, fill=titles)) +
-  geom_bar(stat="identity")+theme_minimal()
+  geom_bar(stat="identity")+labs(x='Case Title', y='Case Number', title='Total Cases')+theme_minimal()
 
 
 
@@ -235,5 +226,7 @@ p3 = ggplot(simulationDailyTotalSick, aes(x = day, y = total)) +
 
 grid.arrange(p1, p2, p3, ncol=1)
 
+
+# THOUGHTS 
 
 
