@@ -216,7 +216,7 @@ ggplot(totalSick, aes(fill=gender, y=total, x=day)) +
 # Daily Infection sick compared to how many of them are immunized
 ggplot(ImmunizedOrNot, aes(fill=immunised, y=total, x=day)) + 
   geom_bar(position='dodge', stat='identity')+
-  labs(x='Pandemic Days', y='Total infections', title='Daily Infections by Gender')+theme_minimal()
+  labs(x='Pandemic Days', y='Total Daily Iinfections', title='Daily Infections: Un-immunized [Lightblue] | Immunized [Darkblue]')+theme_minimal()
 
 
 
