@@ -50,7 +50,6 @@ hospitazationYoungest <- 5
 # a person is born healthy
 # a person is immunized if not their chance is a default 1 
 # a person has 0 Hospitalizations to begin with
-# a person has 0 connections to begin with
 # a person can be infectious for 10 days 
 # create data frame 
 People <<- data.frame (
@@ -65,12 +64,8 @@ People <<- data.frame (
   
   Hospitalizations = c(rep(0, numPopulation)), # if a person has been hospitalized
   
-  connection = c(rep(0, numPopulation)), # if a sick person connects with this person
-  
   infectious = c(rep(0, numPopulation)), #  if this person is sick they can infect others
-  
-  infectedToday = c(rep(0, numPopulation)) # True if the person was infected today
-)
+  )
 # add sick people randomly
 People$Vitality[sample(nrow(People),numPatientZero)] <- "Sick"
 
@@ -228,5 +223,16 @@ grid.arrange(p1, p2, p3, ncol=1)
 
 
 # THOUGHTS 
+# LIMITATIONS
+# there is no way to vaccinate the people 
+# graphs dont show the total change through the infection period however they show daily changes
+# no third gender 
+# people can not quarantine period
+# people dont have connection groups i.e. a person can only meet people their connected to for exmaple people they work with
+# people dont die at a higher rate based on age i.e. babies and elderly 
+# People dont have a period where they are in hospital, if they did they wouldnt be able to get sick nor infect others and their death percentage would be lowered 
+# there is no third state where someone is made so sick that they are no longer able to infect others i.e. someone is bed ridden
+# no vaccine rollout days where a percentage of the population has access to vaccines and the others done 
+# no way to age select who gets the vaccine 
 
 
